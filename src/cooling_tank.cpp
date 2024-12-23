@@ -1,7 +1,28 @@
+/*
+Cooling Tank Main Run file with Program Execution
+MENU includes the following :
+1. Run Program - key 'R'
+2. Display Fan and Pump States - key 'D'
+3. Run Tests with cassert - key 'T'
+4. Exit with write to PLC and gtest test cases - key 'X'
+
+PLC COMMUNICATIONS
+PLC COMMS used - libplctag C library - assumed communication with CLX ControlLogix PLC. 
+PLC Control - a CLX tag is used in the plc for 0/1 indication in case of system critical (temp > TEMP_ALARM)
+
+With cpppo installed (pip install cpppo) Run the following in a terminal
+python3 -m cpppo.server.enip --print clx_alarm_tag=DINT -a 127.0.0.1
+python3 -m cpppo.server.enip.client -v --print clx_alarm_tag=25 -a 127.0.0.1 -r 20
+
+- Dhruv Sharma
+*/
+
 #include <iostream>
 #include "cooling_tank.h"
 #include "libplctag.h"
 #include <vector>
+#include <gtest/gtest.h>
+#include "tests.h"
 
 // Set global variables
 const int DATA_TIMEOUT = 5000;
@@ -10,8 +31,9 @@ int fan_warning_indication = 0;
 float temp_sensor_input_IN = 90.0;
 bool ignition_switch = 1;               // Set to 1 to enable fan_start & pump_start
 
-
-int main(int argc, char* argv[]){
+//Main Loop
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
 
     std::vector<float> temp_inputs;     //to save all temperature input arguments 
 
@@ -47,7 +69,7 @@ int main(int argc, char* argv[]){
 
     // Program Execution
     do{
-        std::cout<<"\nPress 'r' to run program, 't' for tests and 'x' to exit\n";
+        std::cout<<"\nPress 'r' to run program; 'd' to Display Fan/Pump State; 't' for tests and 'x' to exit with gtest\n";
         std::cin>>user_in;      //user input
         
         if(user_in == 'r' || user_in == 'R'){       //when in run mode
@@ -75,6 +97,11 @@ int main(int argc, char* argv[]){
             tank.testControlFan();
             tank.testSafetyCheck();
         }
+        else if(user_in == 'd' || user_in == 'D'){
+            // See current states for the pump and fan
+            std::cout<<"\n Pump start = "<<tank.getPumpState()<<"\n";
+            std::cout<<"\n Fan start = "<<tank.getFanState()<<"\n";
+        }
         else{
             // Not a valid input
             std::cout<<"\nNot a valid input\n";
@@ -82,8 +109,6 @@ int main(int argc, char* argv[]){
 
     }while(user_in!='x');       //Exit
     std::cout<<"\nProgram Exiting\n";
-    
-
 
     // Setting PLC tag value on CLX - ControlLogix Ethernet IP
     plc_status = plc_tag_create(tag_status_path_read.c_str(), DATA_TIMEOUT);    //create tag
@@ -100,5 +125,5 @@ int main(int argc, char* argv[]){
 
     plc_tag_destroy(plc_status);        //destroy tag and clear memory
 
-    return 0;
+    return RUN_ALL_TESTS();
 }
