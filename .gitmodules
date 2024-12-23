@@ -1,0 +1,3 @@
+[submodule "submodule/libplctag"]
+	path = submodule/libplctag
+	url = https://github.com/libplctag/libplctag.git
