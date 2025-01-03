@@ -17,6 +17,10 @@ Added cassert test cases for individual test logging.
 #ifndef _cooling_tank_h 
 #define _cooling_tank_h 
 
+#define KP 2.0
+#define KI 0.1
+#define KD 0.05
+
 #include <iostream>
 #include <random>
 #include <cassert>
@@ -28,6 +32,9 @@ const float HI_PUMP_SETPOINT = 60;
 const float FAN_SETPOINT = 20;
 const float HI_FAN_SETPOINT = 60;
 const float TEMP_ALARM = 80;
+
+float previousError = 0;
+float integral = 0;
 
 // Cooling Tank Class
 class Cooling_Tank{
@@ -221,4 +228,5 @@ void Cooling_Tank::testSafetyCheck() {
 
     std::cout << "safetyCheck tests passed.\n";
 }
+
 #endif
