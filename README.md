@@ -75,3 +75,23 @@ python3 -m cpppo.server.enip.client -v --print clx_alarm_tag=0 -a 127.0.0.1 -r 2
 
 This will run a client to simulate a PLC ControlLogix with tagname clx_alarm_tag
 and run a client to update it initially with 0. This will now be updated by the program.
+
+
+## Running the program 
+
+Navigate to tank_code_ws
+Create a build folder
+Run cmake 
+Run make
+Run ./cooling_tank
+
+## HOW TO RUN 
+
+```
+cd tank_code_ws
+mkdir -p build
+cd build
+cmake ..
+make
+./cooling_tank
+```
