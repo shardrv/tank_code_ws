@@ -57,3 +57,7 @@ make
 export LD_LIBRARY_PATH=~/$home/tank_code_ws/submodule/libplctag:$LD_LIBRARY_PATH
 sudo ldconfig
 
+echo "*******************"
+echo "*******************"
+echo "ALL DONE"
+echo "Now navigate to build folder and run ./cooling_tank"
