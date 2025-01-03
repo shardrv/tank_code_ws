@@ -8,4 +8,4 @@ find_library(PLCTAG_LIB submodule/libplctag)
 
 add_executable(cooling_tank src/cooling_tank.cpp)
 
-target_link_libraries(cooling_tank gtest "${PLCTAG_LIB}")
+target_link_libraries(cooling_tank gtest plctag)
