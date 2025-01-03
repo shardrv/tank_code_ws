@@ -79,11 +79,13 @@ and run a client to update it initially with 0. This will now be updated by the 
 
 ## Running the program 
 
+```
 Navigate to tank_code_ws
 Create a build folder
 Run cmake 
 Run make
 Run ./cooling_tank
+```
 
 ## HOW TO RUN 
 
