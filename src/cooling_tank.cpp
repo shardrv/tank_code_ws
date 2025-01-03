@@ -31,6 +31,54 @@ int fan_warning_indication = 0;
 float temp_sensor_input_IN = 90.0;
 bool ignition_switch = 1;               // Set to 1 to enable fan_start & pump_start
 
+//A PID Control Loop Please see the cooling_tank.h for gain values
+//Ideally these would be tuned in using input values in field
+//These are mimiced at the moment
+void PIDControl(float setpoint, float currentTemp){
+
+    Cooling_Tank new_tank;      //create a new instance
+
+    float error = setpoint - currentTemp;       //calculate the error
+
+    float proportional = KP * error;        //proportional 
+
+    integral += error;
+    float integralTerm = KI * integral;     //integral
+
+    float derivative = error - previousError;       //derivative
+    float derivativeTerm = KD * derivative;
+
+    //output
+    float pidOutput = proportional + integralTerm + derivativeTerm;
+
+    std::cout<<"\nPID Loop Running\n";
+
+    std::cout<<"\nError = "<<error<<" Proportional = "<<proportional<<" Integral = "<<integralTerm << " Derivative = "<<derivativeTerm<<" Output = "<<pidOutput<<"\n";
+
+    //control using the error - if error > 0 pump/fan should be turned ON else OFF
+    //this is mimicked using print statements
+    if(error > 0){
+        std::cout<<"\n Pump and Fan need to turn ON ";
+    }
+    else{
+        std::cout<<"\n Pump and Fan need to turn OFF ";
+    }
+
+    /*
+    // This section is to enable in case of real outputs
+    new_tank.Fan_Control(error);
+    new_tank.Pump_Control(error);
+
+    //check for states of fan and pump
+    std::cout<<"\n Pump start = "<<new_tank.getPumpState()<<"\n";
+    std::cout<<"\n Fan start = "<<new_tank.getFanState()<<"\n";
+    */
+
+    //store the last error
+    previousError = error;
+
+};
+
 //Main Loop
 int main(int argc, char* argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
@@ -109,6 +157,10 @@ int main(int argc, char* argv[]) {
 
     }while(user_in!='x');       //Exit
     std::cout<<"\nProgram Exiting\n";
+
+    std::cout<<"\nPID CONTROL DEMO\n";
+    PIDControl(HI_FAN_SETPOINT, tank.temp_simulate(0, temp_sensor_input_IN));
+    PIDControl(HI_FAN_SETPOINT, tank.temp_simulate(0, temp_sensor_input_IN));
 
     // Setting PLC tag value on CLX - ControlLogix Ethernet IP
     plc_status = plc_tag_create(tag_status_path_read.c_str(), DATA_TIMEOUT);    //create tag
