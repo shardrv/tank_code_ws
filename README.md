@@ -1,5 +1,12 @@
 # Cooling Tank Operation
 
+## Quick Start
+
+Run the file run_tank_setup.bash
+
+```
+bash run_tank_setup.bash
+```
 
 ## Requirements
 - cpppo library -  For PLC simulation
